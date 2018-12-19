@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+
+<repositories version="1.0">
+	<repo priority="50" quality="experimental" status="unofficial">
+		<name>aleek</name>
+		<description>Aggregate overlay for my stuff.</description>
+		<homepage>https://github.com/aleek/gentoo-overlay</homepage>
+		<owner>
+			<email>overlay@sztajfa.cc</email>
+		</owner>
+		<source type="git">https://github.com/aleek/gentoo-overlay.git</source>
+	</repo>
+</repositories>
