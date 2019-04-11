@@ -64,7 +64,7 @@ fi
 FFMPEG_FLAG_MAP=(
 		+bzip2:bzlib cpudetection:runtime-cpudetect debug gcrypt gnutls gmp
 		+gpl +hardcoded-tables +iconv lzma +network opencl openssl +postproc
-		samba:libsmbclient sdl:ffplay sdl:sdl2 vaapi vdpau X:xlib xcb:libxcb
+		samba:libsmbclient sdl:ffplay sdl:sdl2 cuda vaapi vdpau X:xlib xcb:libxcb
 		xcb:libxcb-shm xcb:libxcb-xfixes +zlib
 		# libavdevice options
 		cdio:libcdio iec61883:libiec61883 ieee1394:libdc1394 libcaca openal
@@ -168,6 +168,7 @@ RDEPEND="
 	bzip2? ( >=app-arch/bzip2-1.0.6-r4[${MULTILIB_USEDEP}] )
 	cdio? ( >=dev-libs/libcdio-paranoia-0.90_p1-r1[${MULTILIB_USEDEP}] )
 	chromaprint? ( >=media-libs/chromaprint-1.2-r1[${MULTILIB_USEDEP}] )
+	cuda? ( dev-util/nvidia-cuda-sdk )
 	encode? (
 		amrenc? ( >=media-libs/vo-amrwbenc-0.1.2-r1[${MULTILIB_USEDEP}] )
 		kvazaar? ( media-libs/kvazaar[${MULTILIB_USEDEP}] )
@@ -309,6 +310,15 @@ multilib_src_configure() {
 	local ffuse=( "${FFMPEG_FLAG_MAP[@]}" )
 	use openssl && use gpl && myconf+=( --enable-nonfree )
 	use samba && myconf+=( --enable-version3 )
+
+	# Cuda, headers are under /opt/cuda
+	if use cuda; then
+		myconf+=( --enable-nonfree )
+		myconf+=( --enable-cuvid )
+		myconf+=( --extra-cflags=-I/opt/cuda/include)
+	else
+		myconf+=( --disable-cuvid )
+	fi
 
 	# Encoders
 	if use encode ; then
@@ -474,6 +484,11 @@ multilib_src_install() {
 			emake V=1 DESTDIR="${D}" install-libffmpeg
 			popd >/dev/null || die
 		fi
+	fi
+
+	# Required on Hardened due to binary nvidia libs
+	if use cuda; then
+		pax-mark -mr "${D}"usr/bin/${PN}
 	fi
 }
 
