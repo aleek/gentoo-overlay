@@ -143,6 +143,7 @@ GTK+ icon theme.
 "
 
 PATCHES=(
+	"${FILESDIR}/add-hevc-support.patch"
 	"${FILESDIR}/chromium-compiler-r7.patch"
 	"${FILESDIR}/chromium-widevine-r4.patch"
 	"${FILESDIR}/chromium-webrtc-r0.patch"
