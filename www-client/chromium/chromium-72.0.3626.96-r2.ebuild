@@ -143,6 +143,7 @@ GTK+ icon theme.
 "
 
 PATCHES=(
+	"${FILESDIR}/add-hevc-support-v2.patch"
 	"${FILESDIR}/chromium-compiler-r7.patch"
 	"${FILESDIR}/chromium-widevine-r4.patch"
 	"${FILESDIR}/chromium-webrtc-r0.patch"
@@ -502,9 +503,12 @@ src_configure() {
 	# Video and codec dependencies
 	myconf_gn+=" use_vaapi=$(usex vaapi true false)"
 	myconf_gn+=" enable_mojo_media=$(usex vaapi true false)"
-	ffmpeg_branding="$(usex proprietary-codecs Chrome Chromium)"
-	myconf_gn+=" proprietary_codecs=$(usex proprietary-codecs true false)"
+	#ffmpeg_branding="$(usex proprietary-codecs Chrome Chromium)"
+	ffmpeg_branding="Chrome"
+	#myconf_gn+=" proprietary_codecs=$(usex proprietary-codecs true false)"
+	myconf_gn+=" proprietary_codecs=true"
 	myconf_gn+=" ffmpeg_branding=\"${ffmpeg_branding}\""
+	myconf_gn+=" enable_hevc_demuxing=true"
 
 	# Set up Google API keys, see http://www.chromium.org/developers/how-tos/api-keys .
 	# Note: these are for Gentoo use ONLY. For your own distribution,
