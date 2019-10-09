@@ -70,6 +70,7 @@ COMMON_DEPEND="
 	x11-libs/libXrender:=
 	x11-libs/libXScrnSaver:=
 	x11-libs/libXtst:=
+	vaapi? ( >=x11-libs/libva-2.1.0 )
 	x11-libs/pango:=
 	app-arch/snappy:=
 	media-libs/flac:=
@@ -196,6 +197,7 @@ src_prepare() {
 
 	default
 
+	use vaapi && eapply "${FILESDIR}/chromium-76-vaapi-fix.patch"
 	mkdir -p third_party/node/linux/node-linux-x64/bin || die
 	ln -s "${EPREFIX}"/usr/bin/node third_party/node/linux/node-linux-x64/bin/node || die
 
@@ -508,6 +510,8 @@ src_configure() {
 	# Disable forced lld, bug 641556
 	myconf_gn+=" use_lld=false"
 
+	myconf_gn+=" use_vaapi=$(usex vaapi true false)"
+	myconf_gn+=" enable_mojo_media=$(usex vaapi true false)"
 	ffmpeg_branding="$(usex proprietary-codecs Chrome Chromium)"
 	myconf_gn+=" proprietary_codecs=$(usex proprietary-codecs true false)"
 	myconf_gn+=" ffmpeg_branding=\"${ffmpeg_branding}\""
