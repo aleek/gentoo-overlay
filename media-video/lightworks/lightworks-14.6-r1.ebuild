@@ -13,7 +13,7 @@ HOMEPAGE="http://www.lwks.com/"
 #SRC_URI="http://downloads.lwks.com/Lightworks-14.6-Beta-116294-14.6.0.0.deb"
 SRC_URI="http://downloads.lwks.com/Lightworks-14.6.0.0-Beta-117868.deb"
 
-LICENSE="EditShare"
+#LICENSE="EditShare"
 SLOT="0"
 KEYWORDS=""
 RESTRICT=""
