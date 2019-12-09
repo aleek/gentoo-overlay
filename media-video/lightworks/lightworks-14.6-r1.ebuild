@@ -10,7 +10,8 @@ MY_PV="12.6.0"
 
 DESCRIPTION="Lightworks is the fastest, most accessible and focused NLE in the industry"
 HOMEPAGE="http://www.lwks.com/"
-SRC_URI="http://downloads.lwks.com/Lightworks-14.6-Beta-116294-14.6.0.0.deb"
+#SRC_URI="http://downloads.lwks.com/Lightworks-14.6-Beta-116294-14.6.0.0.deb"
+SRC_URI="http://downloads.lwks.com/Lightworks-14.6.0.0-Beta-117868.deb"
 
 LICENSE="EditShare"
 SLOT="0"
@@ -19,7 +20,7 @@ RESTRICT=""
 IUSE=""
 
 RDEPEND="
-	=dev-libs/openssl-1.0*
+	=dev-libs/openssl-1.1*
 	dev-libs/glib:2
 	dev-libs/libedit
 	dev-libs/atk
