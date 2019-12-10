@@ -15,12 +15,12 @@ SRC_URI="http://downloads.lwks.com/Lightworks-14.6.0.0-Beta-117868.deb"
 
 #LICENSE="EditShare"
 SLOT="0"
-KEYWORDS=""
+KEYWORDS="~amd64"
 RESTRICT=""
 IUSE=""
 
+	#=dev-libs/openssl-1.1*
 RDEPEND="
-	=dev-libs/openssl-1.1*
 	dev-libs/glib:2
 	dev-libs/libedit
 	dev-libs/atk
