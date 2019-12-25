@@ -1,28 +1,29 @@
-# Copyright 1999-2019 Gentoo Authors
+#BASE_URI="https://github.com/RocketChat/Rocket.Chat.Electron/releases/download/${PV}"
+
+#SRC_URI="
+#	amd64? ( "${BASE_URI}/${PN%-bin}_${PV}_amd64.deb" )
+#"
+
+# Copyright 2019 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 EAPI=6
 
-MY_PN="${PN%-bin}"
+MY_PN="Rocket.Chat"
 
-inherit eutils gnome2-utils unpacker xdg-utils
+inherit eutils rpm
 
-DESCRIPTION="Have your own Slack like online chat, built with Meteor."
+DESCRIPTION="Rocket.Chat Desktop application"
 HOMEPAGE="https://rocket.chat"
 
-BASE_URI="https://github.com/RocketChat/Rocket.Chat.Electron/releases/download/${PV}"
-
-SRC_URI="
-	amd64? ( "${BASE_URI}/${PN%-bin}_${PV}_amd64.deb" )
-"
+SRC_URI="https://github.com/RocketChat/Rocket.Chat.Electron/releases/download/${PV}/rocketchat-${PV}.x86_64.rpm"
 
 LICENSE="MIT"
 SLOT="0"
 KEYWORDS="~amd64"
-IUSE=""
-RESTRICT=""
 
 RDEPEND="
+	gnome-base/gconf:2
 	dev-libs/atk:0
 	dev-libs/expat:0
 	dev-libs/glib:2
@@ -34,6 +35,7 @@ RDEPEND="
 	media-libs/freetype:2
 	net-print/cups:0
 	sys-apps/dbus:0
+	sys-devel/gcc
 	sys-libs/glibc:2.2
 	x11-libs/cairo:0
 	x11-libs/gdk-pixbuf:2
@@ -50,38 +52,39 @@ RDEPEND="
 	x11-libs/libXrender:0
 	x11-libs/libXScrnSaver:0
 	x11-libs/libXtst:0
-	x11-libs/pango:0
-"
-
-QA_PREBUILT="opt/${MY_PN}/${MY_PN} opt/${MY_PN}/libnode.so opt/${MY_PN}/libffmpeg.so"
+	x11-libs/pango:0"
 
 S="${WORKDIR}"
 
-src_prepare() {
-	sed -r \
-		-e "s@/opt/Rocket.Chat\+@/opt/${MY_PN}@g" \
-		-i "usr/share/applications/${MY_PN}.desktop"
-	default
-}
+QA_PREBUILT="
+	opt/${MY_PN}/rocketchat-desktop
+	opt/${MY_PN}/libnode.so
+	opt/${MY_PN}/libffmpeg.so
+"
+
+DOCS=(
+	"opt/${MY_PN}/LICENSES.chromium.html"
+	"opt/${MY_PN}/LICENSE.electron.txt"
+)
 
 src_install() {
-	rm -r usr/share/doc
+	insinto "/opt/${MY_PN}/locales"
+	doins "opt/${MY_PN}/locales"/*.pak
 
-	newicon -s 512 "usr/share/icons/hicolor/512x512/apps/${MY_PN}.png" "${MY_PN}.png"
-	domenu "usr/share/applications/${MY_PN}.desktop"
+	insinto "/opt/${MY_PN}/resources"
+	doins "opt/${MY_PN}/resources"/*.asar
+	insinto "/opt/${MY_PN}/resources/dictionaries"
+	doins "opt/${MY_PN}/resources/dictionaries"/*.aff "opt/${MY_PN}/resources/dictionaries"/*.dic
 
 	insinto "/opt/${MY_PN}"
-	doins -r "opt/Rocket.Chat+/."
-	fperms +x "/opt/${MY_PN}/${MY_PN}"
-	make_wrapper "${MY_PN}" "${EPREFIX}/opt/${MY_PN}/${MY_PN}" "${EPREFIX}/opt/${MY_PN}"
-}
+	doins "opt/${MY_PN}"/*.pak "opt/${MY_PN}"/*.bin "opt/${MY_PN}"/*.dat
+	exeinto "/opt/${MY_PN}"
+	doexe "opt/${MY_PN}"/*.so "opt/${MY_PN}/rocketchat-desktop"
 
-pkg_postinst() {
-	xdg_desktop_database_update
-	gnome2_icon_cache_update
-}
+	dosym "../../opt/${MY_PN}/rocketchat-desktop" "/usr/bin/rocketchat-desktop"
 
-pkg_postrm() {
-	xdg_desktop_database_update
-	gnome2_icon_cache_update
+	newicon "${S}/usr/share/icons/hicolor/512x512/apps/rocketchat-desktop.png" "rocketchat-desktop.png"
+	make_desktop_entry rocketchat-desktop "${MY_PN}" rocketchat-desktop
+
+	einstalldocs
 }
