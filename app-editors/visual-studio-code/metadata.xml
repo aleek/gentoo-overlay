@@ -2,7 +2,8 @@
 <!DOCTYPE pkgmetadata SYSTEM "http://www.gentoo.org/dtd/metadata.dtd">
 <pkgmetadata>
 	<maintainer type="person">
-		<email>unknown@pentoo.ch</email>
-		<name>Author Unknown</name>
+		<email>samuelbernardo.mail@gmail.com</email>
+		<name>Samuel Bernardo</name>
+		<description>ssnb Gentoo Overlay</description>
 	</maintainer>
 </pkgmetadata>
